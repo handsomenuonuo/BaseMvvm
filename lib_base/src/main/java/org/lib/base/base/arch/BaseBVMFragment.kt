@@ -38,10 +38,8 @@ abstract class BaseBVMFragment<B : ViewDataBinding, VM : BaseViewModel> : BaseBi
     }
 
     protected fun injectViewModel() {
-        val vm = createViewModel()
-        viewModel = ViewModelProvider(this, BaseViewModel.createViewModelFactory(vm))
-            .get(vm::class.java)
-        viewModel.application = activity!!.application
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
+        viewModel.application = requireActivity().application
         lifecycle.addObserver(viewModel)
     }
 
@@ -71,7 +69,7 @@ abstract class BaseBVMFragment<B : ViewDataBinding, VM : BaseViewModel> : BaseBi
         }
     }
 
-    protected abstract fun createViewModel(): VM;
+    protected abstract fun getViewModelClass(): Class<VM>
 }
 
 abstract class BaseBVM2Fragment<B : ViewDataBinding, VM : BaseViewModel> : BaseBinding2Fragment<B>(),
@@ -96,10 +94,8 @@ abstract class BaseBVM2Fragment<B : ViewDataBinding, VM : BaseViewModel> : BaseB
     }
 
     protected fun injectViewModel() {
-        val vm = createViewModel()
-        viewModel = ViewModelProvider(this, BaseViewModel.createViewModelFactory(vm))
-            .get(vm::class.java)
-        viewModel.application = activity!!.application
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
+        viewModel.application = requireActivity().application
         lifecycle.addObserver(viewModel)
     }
 
@@ -129,5 +125,5 @@ abstract class BaseBVM2Fragment<B : ViewDataBinding, VM : BaseViewModel> : BaseB
         }
     }
 
-    protected abstract fun createViewModel(): VM;
+    protected abstract fun getViewModelClass(): Class<VM>
 }

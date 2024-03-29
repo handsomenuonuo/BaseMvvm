@@ -1,10 +1,11 @@
 package org.lib.base.base.arch
 
-import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import org.lib.base.extensions.observeNonNull
 import org.lib.base.extensions.observeNullable
+
 
 /**
  * @author: HuangFeng
@@ -18,16 +19,14 @@ abstract class BaseBVMActivity<B : ViewDataBinding, VM : BaseViewModel> : BaseBi
     protected lateinit var viewModel: VM
         private set
 
-    override fun initContentView() {
-        super.initContentView()
-        injectViewModel()
+    override fun initContentView(savedInstanceState: Bundle?) {
+        super.initContentView(savedInstanceState)
+        injectViewModel(savedInstanceState)
         initInternalObserver()
     }
 
-    protected fun injectViewModel() {
-        val vm = createViewModel()
-        viewModel = ViewModelProvider(this, BaseViewModel.createViewModelFactory(vm))
-            .get(vm::class.java)
+    protected fun injectViewModel(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
         viewModel.application = application
         lifecycle.addObserver(viewModel)
     }
@@ -59,5 +58,5 @@ abstract class BaseBVMActivity<B : ViewDataBinding, VM : BaseViewModel> : BaseBi
         }
     }
 
-    protected abstract fun createViewModel(): VM
+    protected abstract fun getViewModelClass(): Class<VM>
 }

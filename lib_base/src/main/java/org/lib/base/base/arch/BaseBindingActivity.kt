@@ -1,5 +1,6 @@
 package org.lib.base.base.arch
 
+import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import org.lib.base.base.arch.BaseActivity
@@ -16,7 +17,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : BaseActivity(),
     protected lateinit var binding: B
         private set
 
-    override fun initContentView() {
+    override fun initContentView(savedInstanceState: Bundle?) {
         injectDataBinding()
     }
 

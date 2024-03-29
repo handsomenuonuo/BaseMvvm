@@ -40,4 +40,5 @@ dependencies {
     androidTestImplementation deps['test-junit']
     androidTestImplementation deps['espresso-core']
     api project(":lib_base")
+//    api 'com.github.handsomenuonuo:BaseMvvm:test1'
 }

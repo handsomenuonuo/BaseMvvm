@@ -16,11 +16,11 @@ abstract class BaseActivity : AppCompatActivity(), PermissionUtils.PermissionCal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initContentView()
+        initContentView(savedInstanceState)
         initialize(savedInstanceState)
     }
 
-    protected open fun initContentView() {
+    protected open fun initContentView(savedInstanceState: Bundle?) {
         setContentView(getLayoutId())
     }
 
