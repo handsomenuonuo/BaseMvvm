@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_no_layout" >未设置layout，请在layout中设置布局的id。</string>
+
+    <string name="error_gif" >错误Gif图片</string>
+</resources>
