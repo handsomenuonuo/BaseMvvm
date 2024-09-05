@@ -34,10 +34,9 @@ class BaseFragmentDialog : DialogFragment() {
     private var gravity : Int = 0
     private var cancelOutside : Boolean = true
     private var c: Boolean = true
-    private var clickViewMap : HashMap<Int, Dialog.()->Unit> = HashMap()
-    private var getViewMap : HashMap<Int, View.()->Unit> = HashMap()
-    private var getViewReturnRootViewMap : HashMap<Int, View.(View)->Unit> = HashMap()
-    private var rootViewFun: View.() -> Unit ?= {}
+    private var clickViewMap : HashMap<Int, Dialog.(View)->Unit> = HashMap()
+    private var getViewMap : HashMap<Int, View.(View)->Unit> = HashMap()
+    private var rootViewFun: Dialog.(View) -> Unit ?= {}
     private var textMap: HashMap<Int, String> = HashMap()
     private var backgroundAlpha: Float = 0.4f
     private var  cancelId: Int = 0
@@ -65,23 +64,18 @@ class BaseFragmentDialog : DialogFragment() {
         }
         for(key in clickViewMap.keys){
             view.findViewById<View>(key).setOnClickListener{
-                clickViewMap[key]?.invoke(dialog!!)
+                clickViewMap[key]?.invoke(dialog!!,view)
             }
         }
         for(key in getViewMap.keys){
             view.findViewById<View>(key).apply {
-                getViewMap[key]?.invoke(this)
-            }
-        }
-        for(key in getViewReturnRootViewMap.keys){
-            view.findViewById<View>(key).apply {
-                getViewReturnRootViewMap[key]?.invoke(this,view)
+                getViewMap[key]?.invoke(this,view)
             }
         }
         for(key in textMap.keys){
             (view.findViewById<View>(key) as TextView).text = textMap[key]
         }
-        rootViewFun.invoke(view)
+        rootViewFun.invoke(dialog!!,view)
         return view
     }
 
@@ -117,17 +111,6 @@ class BaseFragmentDialog : DialogFragment() {
         show(fm!!,t)
     }
 
-//    @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.PROPERTY)
-//    @MustBeDocumented
-//    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
-//    @IntDef(BOTTOM, CENTER, TOP)
-//    annotation class DialogGravity
-
-    //    companion object {
-//        const val BOTTOM = Gravity.BOTTOM
-//        const val CENTER = Gravity.CENTER
-//        const val TOP = Gravity.TOP
-//    }
     class Builder(fm: FragmentManager) {
         private var fragmentManager: FragmentManager ?= fm
         @LayoutRes
@@ -138,10 +121,9 @@ class BaseFragmentDialog : DialogFragment() {
         private var cancelOutside: Boolean = true
         private var height = 0
         private var width = 0
-        private var clickViewMap: HashMap<Int, Dialog.() -> Unit> = HashMap()
-        private var getViewMap: HashMap<Int, View.() -> Unit> = HashMap()
-        private var getViewReturnRootViewMap: HashMap<Int, View.(View) -> Unit> = HashMap()
-        private var rootViewFun: View.() -> Unit ?= {}
+        private var clickViewMap: HashMap<Int, Dialog.(View) -> Unit> = HashMap()
+        private var getViewMap: HashMap<Int, View.(View) -> Unit> = HashMap()
+        private var rootViewFun: Dialog.(View) -> Unit ?= {}
         private var textMap: HashMap<Int, String> = HashMap()
         private var cancelable: Boolean = true
         private var backgroundAlpha: Float = 0.4f
@@ -253,7 +235,7 @@ class BaseFragmentDialog : DialogFragment() {
         /***
          * 设置点击事件
          */
-        fun addViewClick(@IdRes id: Int, c: Dialog.() -> Unit): Builder {
+        fun addViewClick(@IdRes id: Int, c: Dialog.(View) -> Unit): Builder {
             this.clickViewMap[id] = c
             return this
         }
@@ -261,20 +243,12 @@ class BaseFragmentDialog : DialogFragment() {
         /***
          * 获取view，实现自定义操作，例如初始化属性
          */
-        fun getView(@IdRes id: Int, c: View.() -> Unit):Builder{
+        fun getView(@IdRes id: Int, c: View.(View) -> Unit):Builder{
             this.getViewMap[id] = c
             return this
         }
 
-        /***
-         * 获取view，实现自定义操作，例如初始化属性
-         */
-        fun getView(@IdRes id: Int, c: View.(View) -> Unit):Builder{
-            this.getViewReturnRootViewMap[id] = c
-            return this
-        }
-
-        fun rootView(c: View.() -> Unit):Builder{
+        fun rootView(c: Dialog.(View) -> Unit):Builder{
             rootViewFun = c
             return this
         }
@@ -298,7 +272,6 @@ class BaseFragmentDialog : DialogFragment() {
                 it.cancelOutside = cancelOutside
                 it.clickViewMap = clickViewMap
                 it.getViewMap = getViewMap
-                it.getViewReturnRootViewMap = getViewReturnRootViewMap
                 it.rootViewFun = rootViewFun
                 it.textMap = textMap
                 it.c = cancelable
