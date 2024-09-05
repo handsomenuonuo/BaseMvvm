@@ -36,6 +36,8 @@ class BaseFragmentDialog : DialogFragment() {
     private var c: Boolean = true
     private var clickViewMap : HashMap<Int, Dialog.()->Unit> = HashMap()
     private var getViewMap : HashMap<Int, View.()->Unit> = HashMap()
+    private var getViewReturnRootViewMap : HashMap<Int, View.(View)->Unit> = HashMap()
+    private var rootViewFun: View.() -> Unit ?= {}
     private var textMap: HashMap<Int, String> = HashMap()
     private var backgroundAlpha: Float = 0.4f
     private var  cancelId: Int = 0
@@ -71,9 +73,15 @@ class BaseFragmentDialog : DialogFragment() {
                 getViewMap[key]?.invoke(this)
             }
         }
+        for(key in getViewReturnRootViewMap.keys){
+            view.findViewById<View>(key).apply {
+                getViewReturnRootViewMap[key]?.invoke(this,view)
+            }
+        }
         for(key in textMap.keys){
             (view.findViewById<View>(key) as TextView).text = textMap[key]
         }
+        rootViewFun.invoke(view)
         return view
     }
 
@@ -132,6 +140,8 @@ class BaseFragmentDialog : DialogFragment() {
         private var width = 0
         private var clickViewMap: HashMap<Int, Dialog.() -> Unit> = HashMap()
         private var getViewMap: HashMap<Int, View.() -> Unit> = HashMap()
+        private var getViewReturnRootViewMap: HashMap<Int, View.(View) -> Unit> = HashMap()
+        private var rootViewFun: View.() -> Unit ?= {}
         private var textMap: HashMap<Int, String> = HashMap()
         private var cancelable: Boolean = true
         private var backgroundAlpha: Float = 0.4f
@@ -256,6 +266,19 @@ class BaseFragmentDialog : DialogFragment() {
             return this
         }
 
+        /***
+         * 获取view，实现自定义操作，例如初始化属性
+         */
+        fun getView(@IdRes id: Int, c: View.(View) -> Unit):Builder{
+            this.getViewReturnRootViewMap[id] = c
+            return this
+        }
+
+        fun rootView(c: View.() -> Unit):Builder{
+            rootViewFun = c
+            return this
+        }
+
         fun build(): BaseFragmentDialog {
             return BaseFragmentDialog().also {
                 (layout == 0).trueLet {
@@ -275,6 +298,8 @@ class BaseFragmentDialog : DialogFragment() {
                 it.cancelOutside = cancelOutside
                 it.clickViewMap = clickViewMap
                 it.getViewMap = getViewMap
+                it.getViewReturnRootViewMap = getViewReturnRootViewMap
+                it.rootViewFun = rootViewFun
                 it.textMap = textMap
                 it.c = cancelable
                 it.backgroundAlpha = backgroundAlpha

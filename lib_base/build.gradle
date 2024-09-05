@@ -12,7 +12,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.handsomenuonuo'
                 artifactId = 'basemvvm'
-                version = '0.0.1'
+                version = '0.0.3'
             }
         }
     }
@@ -25,8 +25,8 @@ android {
     defaultConfig {
         minSdk versions.minSdkVersion
         targetSdk versions.targetSdkVersion
-        versionCode 2
-        versionName '0.0.2'
+        versionCode 3
+        versionName '0.0.3'
 
         consumerProguardFiles 'consumer-rules.pro'
         multiDexEnabled true

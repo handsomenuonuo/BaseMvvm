@@ -43,6 +43,6 @@ dependencies {
 
     implementation project(':mod_lib_common')
 
-    kapt deps['AutoProtocol']
-    implementation deps['AutoProtocol']
+//    kapt deps['AutoProtocol']
+//    implementation deps['AutoProtocol']
 }

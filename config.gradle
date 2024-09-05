@@ -27,7 +27,7 @@ ext{
             'autosize'            : 'me.jessyan:autosize:1.2.1',
             'baserecyclerviewAdapter': 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4',
             'lifecycle-viewmodel' : 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-alpha05',
-            'AutoProtocol'        : 'com.github.handsomenuonuo:AutoProtocol:test003'
+            'AutoProtocol'        : 'com.github.handsomenuonuo:AutoProtocol:0.0.1'
 
     ]
 

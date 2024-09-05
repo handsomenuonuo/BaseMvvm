@@ -3,9 +3,11 @@ package org.hf.basemvvm
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.lifecycle.SavedStateViewModelFactory
 import hf.org.basemvvm.R
 import hf.org.basemvvm.databinding.ActivityMainBinding
+import org.lib.base.base.ui.dialog.BaseFragmentDialog
 import org.mod.common.base.BaseAppBVMActivity
 
 class MainActivity : BaseAppBVMActivity<ActivityMainBinding, MainViewModel>() {
@@ -19,7 +21,6 @@ class MainActivity : BaseAppBVMActivity<ActivityMainBinding, MainViewModel>() {
 //        val s = SavedStateViewModelFactory
         binding.viewModel = viewModel
         Log.e("test","MainActivity initialize")
-
     }
 
 }
